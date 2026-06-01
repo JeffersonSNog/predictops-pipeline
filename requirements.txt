@@ -10,3 +10,4 @@ pydantic==2.8.2
 joblib==1.4.2
 matplotlib==3.9.2
 seaborn==0.13.2
+setuptools==71.1.0
