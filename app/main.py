@@ -27,9 +27,17 @@ def health():
 @app.post("/predict")
 def predict(features: MachineFeatures):
     df = pd.DataFrame([features.dict()])
+    df = df.rename(columns={
+    "Type": "Type",
+    "Air_Temperature": "Air temperature [K]",
+    "Process_Temperature": "Process temperature [K]",
+    "Rotational_Speed": "Rotational speed [rpm]",
+    "Torque": "Torque [Nm]",
+    "Tool_Wear": "Tool wear [min]"
+})
     df = encode_type(df)
     df = engineer_features(df)
     prediction = model.predict(df)[0]
     probability = model.predict_proba(df)[0][1]
-    return {"prediction": prediction, "probability": probability}
+    return {"prediction": int(prediction), "probability": float(probability)}
 
