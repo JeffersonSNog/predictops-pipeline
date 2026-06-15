@@ -3,6 +3,7 @@ import mlflow.sklearn
 from pydantic import BaseModel
 import pandas as pd
 from src.preprocess import encode_type, engineer_features
+from datetime import datetime
 
 app = FastAPI(title="PredictOps API", version="1.0.0")
 
@@ -39,5 +40,15 @@ def predict(features: MachineFeatures):
     df = engineer_features(df)
     prediction = model.predict(df)[0]
     probability = model.predict_proba(df)[0][1]
-    return {"prediction": int(prediction), "probability": float(probability)}
+    return {
+        "prediction": int(prediction),
+        "label": "FAILURE" if prediction == 1 else "NORMAL",
+        "probability": float(probability)
+    }
 
+@app.get("/model-info")
+def modelinfo():
+    return({"Nome do Modelo" : "Gradient Boosting",
+           "F1": 0.89,
+           "Roc_Auc": 0.97,
+           "Data": datetime.now().isoformat()})
