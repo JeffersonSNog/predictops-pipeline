@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from contextlib import asynccontextmanager
 import mlflow.sklearn
 from pydantic import BaseModel, Field
 import pandas as pd
@@ -6,9 +7,15 @@ from src.preprocess import encode_type, engineer_features
 from datetime import datetime
 from typing import Literal
 
-app = FastAPI(title="PredictOps API", version="1.0.0")
-
 model = None
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global model
+    model = mlflow.sklearn.load_model("runs:/bd8f8ff503ab4824b2dac683d5920a7f/model")
+    yield
+
+app = FastAPI(title="PredictOps API", version="1.0.0", lifespan=lifespan)
 
 class MachineFeatures(BaseModel):
     Type: Literal["L", "M", "H"]
@@ -18,19 +25,13 @@ class MachineFeatures(BaseModel):
     Torque: float = Field(ge=0)
     Tool_Wear: float = Field(ge=0)
 
-@app.on_event("startup")
-def load_model():
-    global model
-    model = mlflow.sklearn.load_model("runs:/bd8f8ff503ab4824b2dac683d5920a7f/model")
-
-
 @app.get("/health")
 def health():
     return {"status": "ok"}
 
 @app.post("/predict")
 def predict(features: MachineFeatures):
-    df = pd.DataFrame([features.dict()])
+    df = pd.DataFrame([features.model_dump()])
     df = df.rename(columns={
     "Type": "Type",
     "Air_Temperature": "Air temperature [K]",
