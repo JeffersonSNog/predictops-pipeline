@@ -2,8 +2,6 @@ import pytest
 import pandas as pd
 from src.preprocess import engineer_features, encode_type
 
-
-
 def test_encode_type():
     df = pd.DataFrame({"Type": ["L", "M", "H"]})
     result = encode_type(df)
