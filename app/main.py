@@ -1,19 +1,22 @@
 from fastapi import FastAPI
 import mlflow.sklearn
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 import pandas as pd
 from src.preprocess import encode_type, engineer_features
 from datetime import datetime
+from typing import Literal
 
 app = FastAPI(title="PredictOps API", version="1.0.0")
 
+model = None
+
 class MachineFeatures(BaseModel):
-    Type: str
-    Air_Temperature: float
-    Process_Temperature: float
-    Rotational_Speed: int
-    Torque: float
-    Tool_Wear: float
+    Type: Literal["L", "M", "H"]
+    Air_Temperature: float = Field(ge=0)
+    Process_Temperature: float = Field(ge=0)
+    Rotational_Speed: int = Field(ge=0)
+    Torque: float = Field(ge=0)
+    Tool_Wear: float = Field(ge=0)
 
 @app.on_event("startup")
 def load_model():

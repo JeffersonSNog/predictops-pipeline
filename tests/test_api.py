@@ -25,3 +25,11 @@ def test_model_info():
     assert "F1" in data
     assert "Roc_Auc" in data
     assert "Data" in data
+
+def test_predict_invalid_type():
+    result = client.post("/predict", json={"Type": "X","Air_Temperature": 1,"Process_Temperature": 1,"Rotational_Speed": 1,"Torque": 1,"Tool_Wear": 1})
+    assert result.status_code == 422
+
+def test_predict_invalid_number():
+    result = client.post("/predict", json={"Type": "L","Air_Temperature": -1,"Process_Temperature": -1,"Rotational_Speed": -1,"Torque": -1,"Tool_Wear": -1})
+    assert result.status_code == 422
