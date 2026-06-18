@@ -12,7 +12,7 @@ model = None
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global model
-    model = mlflow.sklearn.load_model("runs:/bd8f8ff503ab4824b2dac683d5920a7f/model")
+    model = mlflow.sklearn.load_model("mlruns/185296854917139986/bd8f8ff503ab4824b2dac683d5920a7f/artifacts/model")
     yield
 
 app = FastAPI(title="PredictOps API", version="1.0.0", lifespan=lifespan)
