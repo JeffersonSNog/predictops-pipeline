@@ -8,6 +8,7 @@ from src.preprocess import preprocess_pipeline
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.model_selection import RandomizedSearchCV
+import joblib
 
 def train_baseline(data_path: str, experiment_name: str = "predictops-baseline"):
     
@@ -96,7 +97,9 @@ def gradient_boosting(data_path: str ,experiment_name: str = "predictops-baselin
         mlflow.log_metric("f1_score", f1)
         mlflow.log_metric("roc_auc", auc)
         mlflow.sklearn.log_model(model, "model")
-            
+        joblib.dump(scaler, "scaler.pkl")
+        mlflow.log_artifact("scaler.pkl")
+                    
         print(classification_report(y_test, y_pred, target_names=['Sem Falha', 'Falha']))
         print(f"F1 Score: {f1:.4f}")
         print(f"ROC-AUC: {auc:.4f}")
@@ -148,3 +151,6 @@ def train_gradient_boosting_optimized(data_path: str, experiment_name: str = "pr
         print(f"ROC-AUC: {auc:.4f}")
         
         return model, scaler
+    
+if __name__ == "__main__": 
+    gradient_boosting("data/raw/ai4i2020.csv")

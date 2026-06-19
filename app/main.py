@@ -6,13 +6,16 @@ import pandas as pd
 from src.preprocess import encode_type, engineer_features
 from datetime import datetime
 from typing import Literal
+import joblib
 
 model = None
+scaler = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global model
-    model = mlflow.sklearn.load_model("mlruns/185296854917139986/bd8f8ff503ab4824b2dac683d5920a7f/artifacts/model")
+    global model, scaler
+    scaler = joblib.load("mlruns/185296854917139986/2e7d81a853b643de99cda002a82cb395/artifacts/scaler.pkl")
+    model = mlflow.sklearn.load_model("mlruns/185296854917139986/2e7d81a853b643de99cda002a82cb395/artifacts/model")
     yield
 
 app = FastAPI(title="PredictOps API", version="1.0.0", lifespan=lifespan)
@@ -42,6 +45,7 @@ def predict(features: MachineFeatures):
 })
     df = encode_type(df)
     df = engineer_features(df)
+    df = scaler.transform(df)
     prediction = model.predict(df)[0]
     probability = model.predict_proba(df)[0][1]
     return {
