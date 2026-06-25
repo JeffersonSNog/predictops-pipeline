@@ -56,7 +56,7 @@ def predict(features: MachineFeatures):
 
 @app.get("/model-info")
 def modelinfo():
-    return({"Nome do Modelo" : "Gradient Boosting",
-           "F1": 0.89,
-           "Roc_Auc": 0.97,
-           "Data": datetime.now().isoformat()})
+    return({"model_name" : "Gradient Boosting",
+           "f1": 0.89,
+           "roc_auc": 0.97,
+           "timestamp": datetime.now().isoformat()})

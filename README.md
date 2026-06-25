@@ -116,10 +116,10 @@ Returns champion model metadata.
 
 ```json
 {
-  "Nome do Modelo": "Gradient Boosting",
-  "F1": 0.89,
-  "Roc_Auc": 0.97,
-  "Data": "2026-06-25T00:00:00"
+  "model_name": "Gradient Boosting",
+  "f1": 0.89,
+  "roc_auc": 0.97,
+  "timestamp": "2026-06-25T00:00:00"
 }
 ```
 
