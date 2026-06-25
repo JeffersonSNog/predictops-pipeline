@@ -25,10 +25,10 @@ def test_model_info(client):
     result = client.get("/model-info")
     data = result.json()
     assert result.status_code == 200
-    assert "Nome do Modelo" in data
-    assert "F1" in data
-    assert "Roc_Auc" in data
-    assert "Data" in data
+    assert "model_name" in data
+    assert "f1" in data
+    assert "roc_auc" in data
+    assert "timestamp" in data
 
 def test_predict_invalid_type(client):
     result = client.post("/predict", json={"Type": "X","Air_Temperature": 1,"Process_Temperature": 1,"Rotational_Speed": 1,"Torque": 1,"Tool_Wear": 1})

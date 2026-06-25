@@ -117,8 +117,8 @@ Returns champion model metadata.
 ```json
 {
   "model_name": "Gradient Boosting",
-  "f1": 0.89,
-  "roc_auc": 0.97,
+  "f1": 0.88,
+  "roc_auc": 0.96,
   "timestamp": "2026-06-25T00:00:00"
 }
 ```
